@@ -24,17 +24,17 @@ Download Demo [apk](raw/LargeImage.apk)
 代码
 
 	largeImageView = (LargeImageView) findViewById(R.id.imageView);
-
+	
 	//通过文件的方式加载sd卡中的大图
-    largeImageView.setImage(new FileBitmapDecoderFactory(file));
-
-    //通过流的方式加载assets文件夹里面的大图
-    largeImageView.setImage(new InputStreamBitmapDecoderFactory(getAssets().open(ss[position])))
-
-    //加载普通大小图片
+	largeImageView.setImage(new FileBitmapDecoderFactory(file));
+	
+	//通过流的方式加载assets文件夹里面的大图
+	largeImageView.setImage(new InputStreamBitmapDecoderFactory(getAssets().open(ss[position])))
+	
+	//加载普通大小图片
 	largeImageView.setImage(R.drawable.cat);
-    largeImageView.setImage(drawable);
-    largeImageView.setImage(bitmap);
+	largeImageView.setImage(drawable);
+	largeImageView.setImage(bitmap);
 
 支持的事件
 
@@ -51,7 +51,7 @@ Hook临界值(不设置的话会使用默认的计算缩放最小倍数和最大
      * Hook临界值
      */
     public interface CriticalScaleValueHook {
-
+    
         /**
          * 返回最小的缩放倍数
          * scale为1的话表示，显示的图片和View一样宽
@@ -63,7 +63,7 @@ Hook临界值(不设置的话会使用默认的计算缩放最小倍数和最大
          * @return
          */
         float getMinScale(LargeImageView largeImageView, int imageWidth, int imageHeight, float suggestMinScale);
-
+    
         /**
          * 返回最大的缩放倍数
          * scale为1的话表示，显示的图片和View一样宽
@@ -75,7 +75,7 @@ Hook临界值(不设置的话会使用默认的计算缩放最小倍数和最大
          * @return
          */
         float getMaxScale(LargeImageView largeImageView, int imageWidth, int imageHeight, float suggestMaxScale);
-
+    
     }
 
 例如
@@ -85,7 +85,7 @@ Hook临界值(不设置的话会使用默认的计算缩放最小倍数和最大
             public float getMinScale(LargeImageView largeImageView, int imageWidth, int imageHeight, float suggestMinScale) {
                 return 1;
             }
-
+    
             @Override
             public float getMaxScale(LargeImageView largeImageView, int imageWidth, int imageHeight, float suggestMaxScale) {
                 return 4;
@@ -104,7 +104,7 @@ Hook临界值(不设置的话会使用默认的计算缩放最小倍数和最大
                 ringProgressBar.setVisibility(View.VISIBLE);
                 ringProgressBar.setProgress(0);
             }
-
+    
             @Override
             public void onProgress(long bytesRead, long expectedLength) {
                 int p = 0;
@@ -113,14 +113,14 @@ Hook临界值(不设置的话会使用默认的计算缩放最小倍数和最大
                 }
                 ringProgressBar.setProgress(p);
             }
-
+    
             @Override
             public void onResourceReady(File resource, GlideAnimation<? super File> animation) {
                 super.onResourceReady(resource, animation);
                 ringProgressBar.setVisibility(View.GONE);
                 largeImageView.setImage(new FileBitmapDecoderFactory(resource));
             }
-
+    
             @Override
             public void getSize(SizeReadyCallback cb) {
                 cb.onSizeReady(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
@@ -152,7 +152,7 @@ getDrawData(float imageScale, Rect imageRect)实现细节：
 
 1. 比如图片显示比例是1，那么要横向分多少份才，纵向分多少分，才合理？图片显示比例是4，横向分多少份才，纵向分多少分，才合理。
 -  
- 
+
 所以我采用了基准块（图片比例是1，一个图片块的宽高的合理sise） 
 BASE_BLOCKSIZE = context.getResources().getDisplayMetrics().heightPixels / 2+1;  
 图片缩放比例为1的话，图片块宽高是BASE_BLOCKSIZE  
@@ -180,7 +180,7 @@ BASE_BLOCKSIZE = context.getResources().getDisplayMetrics().heightPixels / 2+1;
 
 getDrawData只返回之前加载过的图片块，而没有加载的是通过LoadHandler.sendMessage去加载
 LoadHandler的Loop是通过HandlerThread线程创建的Loop，也就是开个线程加载. 
-   
+
 每加载一个图片块通过	onImageLoadListenner.onBlockImageLoadFinished();onDraw重绘  
 onDraw又调用getDrawData加载，直至需要显示的图片块加载完成
 
@@ -218,6 +218,20 @@ Indicator 取代 tabhost，实现网易顶部tab，新浪微博主页底部tab�
 其中 android-gesture-detectors-lib 手势类库  
 源地址https://github.com/Almeros/android-gesture-detectors   
 
+
+
+# canvas开启抗锯齿效果的对比
+
+https://cloud.tencent.com/developer/article/1360140
+
+能抗锯齿,但是图像整体会变得模糊一些.
+
+![image-20210220153314958](https://gitee.com/hss012489/picbed/raw/master/picgo/1613806400207-image-20210220153314958.jpg)
+
+## bitmap的一些特效处理:
+
+https://github.com/l123456789jy/Lazy/blob/master/lazylibrary/src/main/java/com/github/lazylibrary/util/ImageProcessor.java
+
 # 联系方式和问题建议
 
 * 微博:http://weibo.com/u/3181073384
@@ -227,13 +241,13 @@ License
 =======
 
     Copyright 2015 shizhefei（LuckyJayce）
-
+    
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
     You may obtain a copy of the License at
-
+    
        http://www.apache.org/licenses/LICENSE-2.0
-
+    
     Unless required by applicable law or agreed to in writing, software
     distributed under the License is distributed on an "AS IS" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.shizhefei.view.largeimage.BlockImageLoader;
 
 public class MainActivity extends FragmentActivity {
     private View networkDemoButton;
@@ -21,6 +22,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        BlockImageLoader.DEBUG = true;
         setContentView(R.layout.activity_main);
         singleDemoVButton = findViewById(R.id.main_singleDemoV_button);
         singleDemoHButton = findViewById(R.id.main_singleDemoH_button);

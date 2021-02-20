@@ -20,6 +20,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PaintFlagsDrawFilter;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -30,6 +31,7 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ScrollerCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -96,6 +98,7 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
         paint = new Paint();
         paint.setColor(Color.GRAY);
         paint.setAntiAlias(true);
+        pfd = new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG);
     }
 
     @Override
@@ -366,10 +369,17 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
         }
         return 0;
     }
+    private PaintFlagsDrawFilter pfd;
+
+    @Override
+    protected void dispatchDraw(Canvas canvas) {
+        super.dispatchDraw(canvas);
+    }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        canvas.setDrawFilter(pfd);
         int viewWidth = getWidth();
         int viewHeight = getHeight();
         if (viewWidth == 0) {
@@ -431,7 +441,14 @@ public class LargeImageView extends View implements BlockImageLoader.OnImageLoad
                         drawRect.bottom -= 3;
                         drawRect.right -= 3;
                         canvas.drawBitmap(data.bitmap, data.srcRect, drawRect, null);
+                        if (BlockImageLoader.DEBUG) {
+                            Log.d(BlockImageLoader.TAG, "bitmap wh:"+data.bitmap.getWidth()+"x"
+                                    +data.bitmap.getHeight()+", data.srcRect:"+data.srcRect.width()+"x"+data.srcRect.height()+
+                                    " ,drawRect:"+drawRect.width()+"x"+drawRect.height());
+                            //bitmap wh:805x805, data.srcRect:600x805 ,drawRect:4314x5790
+                        }
                     }
+
                 }
             } else {
                 if (drawDatas.isEmpty()) {
